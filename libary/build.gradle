@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'com.ycc.ccdoodle'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 24
@@ -23,6 +23,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    //创建具有单个发布内容变体
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
 }
 
 dependencies {
@@ -32,4 +39,20 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+}
+
+apply plugin: 'maven-publish'
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                println("Components: " + components*.name)
+                from components.release
+                groupId = 'cn.yongyecc'
+                artifactId = 'ccdoodle'
+                version = 'v0.0.1'
+            }
+        }
+    }
 }
